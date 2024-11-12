@@ -18,6 +18,8 @@ public class Makeconnection {
         }
     }
 //    public static void main(String[] args){
+
+    //    public static void main(String[] args){
 //        checkDrivers();    //check for driver errors
 //        Connection connection = connect(databaselocation);
 //
@@ -39,4 +41,5 @@ public class Makeconnection {
         checkDrivers();
         return connect(databaselocation);
     }
+  }
 }
