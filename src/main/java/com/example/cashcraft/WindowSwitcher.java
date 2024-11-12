@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import java.io.IOException;
 import java.sql.*;
+import java.util.Objects;
 
 public class WindowSwitcher
 {
@@ -27,13 +28,14 @@ public class WindowSwitcher
             else
             {
                 String pass="";
-                Connection connection = DriverManager.getConnection("jdbc:sqlite:src/main/resources/database.db");
+                Connection connection = Makeconnection.makeconnection();
                 Statement statement = connection.createStatement();
                 ResultSet rs=statement.executeQuery("select password from user where id=701");
                 if(rs.next()) {pass = rs.getString("password");}
                 if(passfield.getText().equals(pass))
                 {
-                    root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+                    connection.close();
+                    root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("hello-view.fxml")));
                     stage = (Stage)((Node)event.getSource()).getScene().getWindow();
                     scene = new Scene(root);
                     stage.setScene(scene);
