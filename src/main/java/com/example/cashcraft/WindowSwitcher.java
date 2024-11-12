@@ -34,6 +34,7 @@ public class WindowSwitcher
                 if(rs.next()) {pass = rs.getString("password");}
                 if(passfield.getText().equals(pass))
                 {
+                    connection.close();
                     root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("hello-view.fxml")));
                     stage = (Stage)((Node)event.getSource()).getScene().getWindow();
                     scene = new Scene(root);
