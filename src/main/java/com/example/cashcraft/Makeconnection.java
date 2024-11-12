@@ -42,4 +42,3 @@ public class Makeconnection {
         return connect(databaselocation);
     }
   }
-}

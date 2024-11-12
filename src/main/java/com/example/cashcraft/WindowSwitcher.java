@@ -30,7 +30,7 @@ public class WindowSwitcher
                 String pass="";
                 Connection connection = Makeconnection.makeconnection();
                 Statement statement = connection.createStatement();
-                ResultSet rs=statement.executeQuery("select password from user where id=1");
+                ResultSet rs=statement.executeQuery("select password from user where id=701");
                 if(rs.next()) {pass = rs.getString("password");}
                 if(passfield.getText().equals(pass))
                 {
