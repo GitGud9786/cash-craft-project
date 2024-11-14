@@ -42,7 +42,7 @@
         </GridPane>
     </graphic>
     <buttonTypes>
-        <ButtonType fx:constant="FINISH" />
-        <ButtonType fx:constant="CANCEL" />
+        <ButtonType fx:id="finishButton" fx:constant="FINISH" />
+        <ButtonType fx:id="cancelButton" fx:constant="CANCEL" />
     </buttonTypes>
 </DialogPane>
