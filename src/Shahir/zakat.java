@@ -1,0 +1,1 @@
+ZakwalletListView.setItems(observableList);
