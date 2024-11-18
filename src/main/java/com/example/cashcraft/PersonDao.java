@@ -17,43 +17,43 @@ public class PersonDao {
             throw new RuntimeException(e);
         }
     }
-    public static void addTransaction(PersonClasses.Expense transaction){
-        try {
-            Connection connection = Makeconnection.makeconnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into expense values(?,?,?,?,?,?)");
+public static void addTransaction(PersonClasses.Expense transaction){
+    try {
+        Connection connection = Makeconnection.makeconnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into expense values(?,?,?,?,?,?)");
 
-            // Convert date to SQL date
-            java.sql.Date sqlDate = new java.sql.Date(transaction.date.getTime());
-            preparedStatement.setDate(1, sqlDate);
+        // Convert date to SQL date
+        java.sql.Date sqlDate = new java.sql.Date(transaction.date.getTime());
+        preparedStatement.setDate(1, sqlDate);
 
-            // Insert category UUID
-            preparedStatement.setString(2, transaction.category.uuid);
+        // Insert category UUID
+        preparedStatement.setString(2, transaction.category.uuid);
 
-            preparedStatement.setString(3, transaction.desc);
-            preparedStatement.setDouble(4, transaction.amount);
+        preparedStatement.setString(3, transaction.desc);
+        preparedStatement.setDouble(4, transaction.amount);
 
-            // Insert people UUID
-            preparedStatement.setString(5, transaction.people.uuid);
+        // Insert people UUID
+        preparedStatement.setString(5, transaction.people.uuid);
 
-            // Insert wallet UUID
-            preparedStatement.setString(6, transaction.wallet.uuid);
+        // Insert wallet UUID
+        preparedStatement.setString(6, transaction.wallet.uuid);
 
-            preparedStatement.executeUpdate();
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        preparedStatement.executeUpdate();
+        connection.close();
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
     }
-    public static void addPerson(PersonClasses.People people) {
-        try {
-            Connection connection = Makeconnection.makeconnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("insert into people values(?,?)");
-            preparedStatement.setString(1, people.name);
-            preparedStatement.setString(2, people.desc);
-            preparedStatement.executeUpdate();
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+}
+public static void addPerson(PersonClasses.People people) {
+    try {
+        Connection connection = Makeconnection.makeconnection();
+        PreparedStatement preparedStatement = connection.prepareStatement("insert into people values(?,?)");
+        preparedStatement.setString(1, people.name);
+        preparedStatement.setString(2, people.desc);
+        preparedStatement.executeUpdate();
+        connection.close();
+    } catch (SQLException e) {
+        throw new RuntimeException(e);
     }
+}
 }
