@@ -4,6 +4,7 @@ ZakwalletListView.getSelectionModel().selectedItemProperty().addListener((observ
         String walName;
         ResultSet tot_Amount;
         walName = newValue.getName();
+
         nameField.setText(newValue.getName());
         descField.setText(newValue.getDescription());
         try (Connection connection = Makeconnection.makeconnection()) {
