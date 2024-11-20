@@ -24,3 +24,4 @@ public void on_graphs_clicked() {
         incomeData.getNode().setStyle("-fx-pie-color: #2ca02c;");//green
         expenseData.getNode().setStyle("-fx-pie-color: #ff0000;");//red
         transfersData.getNode().setStyle("-fx-pie-color: #0000FF;");//blue
+
