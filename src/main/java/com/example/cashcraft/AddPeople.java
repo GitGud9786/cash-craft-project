@@ -47,7 +47,7 @@ public class AddPeople {
         PersonClasses.People people = new PersonClasses.People(name, description);
         try {
             PersonDao.addPeople(people);
-            System.out.println("Category added successfully");
+            System.out.println("Place added successfully");
         } catch (Exception e) {
             System.err.println("Error adding category: " + e.getMessage());
             e.printStackTrace();

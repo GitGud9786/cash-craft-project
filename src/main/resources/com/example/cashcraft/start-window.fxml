@@ -8,6 +8,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -15,15 +18,31 @@
    <left>
       <AnchorPane prefHeight="600.0" prefWidth="324.0" styleClass="radial-gradient" stylesheets="@styler.css" BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="CENTER" layoutX="-1.0" layoutY="60.0" prefHeight="62.0" prefWidth="325.0" stylesheets="@styler.css" text="CA$HCRAFT" textFill="#ffea00" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <Label alignment="CENTER" layoutX="-1.0" layoutY="60.0" prefHeight="62.0" prefWidth="325.0" stylesheets="@styler.css" text="CA$HCRAFT" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <font>
                   <Font name="ROGFonts-Regular" size="40.0" />
                </font>
+               <textFill>
+                  <LinearGradient endX="1.0" endY="0.38834951456310685" startX="1.0" startY="0.7184466019417475">
+                     <stops>
+                        <Stop color="#9e8600" />
+                        <Stop color="#ffea00" offset="1.0" />
+                     </stops>
+                  </LinearGradient>
+               </textFill>
             </Label>
-            <Text fill="#ffd900" layoutX="27.0" layoutY="198.0" lineSpacing="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Navigate your finances with ease and confidence" textAlignment="CENTER" wrappingWidth="270.69775390625">
+            <Text layoutX="27.0" layoutY="198.0" lineSpacing="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Navigate your finances with ease and confidence" textAlignment="CENTER" wrappingWidth="270.69775390625">
                <font>
                   <Font name="Bauhaus 93" size="36.0" />
                </font>
+               <fill>
+                  <RadialGradient centerX="0.5113636363636364" centerY="0.48058252427184467" radius="0.5">
+                     <stops>
+                        <Stop color="#fffcea" />
+                        <Stop color="#ffd900" offset="1.0" />
+                     </stops>
+                  </RadialGradient>
+               </fill>
             </Text>
          </children>
       </AnchorPane>

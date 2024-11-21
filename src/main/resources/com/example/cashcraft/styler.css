@@ -4,11 +4,11 @@
 }
 .radial-gradient {
     /* Radial gradient */
-    -fx-background-color: linear-gradient(to left,#1D2951,#1D2951);
+    -fx-background-color: linear-gradient(to left,#5F0F40,#310E68);
 }
 .button:hover {
     /* New background color when hovering */
-    -fx-background-color: linear-gradient(to right, #111184, #111184);
+    -fx-background-color: linear-gradient(to right, #EE696B, #523A78);
 }
 .radial-green-gradient {
     /* Radial gradient */
@@ -16,7 +16,7 @@
 }
 .linear-transaction-gradient {
     /* Radial gradient */
-    -fx-background-color: linear-gradient(to left, #1D2951, #1D2951);
+    -fx-background-color: linear-gradient(to left, #DBE7FC, #1D2951);
 }
 .linear-transactiontable-gradient {
     /* Radial gradient */
@@ -24,7 +24,7 @@
 }
 .linear-button-gradient {
     /* Radial gradient */
-    -fx-background-color: linear-gradient(to left,#FFFFFF, #FFFFFF);
+    -fx-background-color: linear-gradient(to left, #91A6FF, #FFFFFF);
 }
 .transactionbuttonhover:hover {
     /* Background color when hovering */
@@ -60,4 +60,19 @@
 .linear-edit-gradient {
     /* Radial gradient */
     -fx-background-color: #1D2951;
+}
+.dialog-button {
+    -fx-background-color: linear-gradient(to left, #91A6FF, #FFFFFF);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.dialog-button:hover {
+    -fx-background-color: linear-gradient(to right, #EE696B, #523A78);
+}
+
+.transactionbuttonhover:hover,
+.combo-box .arrow-button:hover {
+    -fx-background-color: linear-gradient(to right, #170E13, #7A7ADB);
+    -fx-text-fill: white;
 }
