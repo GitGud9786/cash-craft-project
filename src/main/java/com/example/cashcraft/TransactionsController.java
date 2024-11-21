@@ -203,81 +203,81 @@ public class TransactionsController implements Initializable
     @FXML
     void on_deleteButton_clicked() {
         // Check if a row is selected in the TableView
-            // Create a confirmation dialog
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Delete confirmation");
-            alert.setHeaderText("Deleting transaction");
-            alert.setContentText("Are you sure you want to delete this item?");
+        // Create a confirmation dialog
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete confirmation");
+        alert.setHeaderText("Deleting transaction");
+        alert.setContentText("Are you sure you want to delete this item?");
 
-            alert.initModality(Modality.APPLICATION_MODAL);//blocking other window events
+        alert.initModality(Modality.APPLICATION_MODAL);//blocking other window events
 
-            // Show the confirmation dialog and wait for the user's response
-            alert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK)
+        // Show the confirmation dialog and wait for the user's response
+        alert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK)
+            {
+                if(selected_type.equals("Transfer"))
                 {
-                    if(selected_type.equals("Transfer"))
+                    int lastColumnIndex = info_box.getColumns().size() - 1;
+                    ObservableList<String> selectedRow = info_box.getSelectionModel().getSelectedItem();
+                    String ID = selectedRow.get(lastColumnIndex);
+                    //System.out.println(ID+"\n");
+                    try {
+                        delete_transfer_statement.setString(1,ID);
+                        delete_transfer_statement.executeUpdate();
+                        Alert confirm = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Success");
+                        alert.setHeaderText("Transfer transaction");
+                        alert.setContentText("Transfer transaction removed");
+                        alert.showAndWait();
+                        on_type_selected();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                else
+                {
+                    int lastColumnIndex = info_box.getColumns().size() - 2;
+                    ObservableList<String> selectedRow = info_box.getSelectionModel().getSelectedItem();
+                    String ID = selectedRow.get(lastColumnIndex);
+                    //System.out.println(ID+"\n");
+                    if(selected_type.equals("Income"))
                     {
-                        int lastColumnIndex = info_box.getColumns().size() - 1;
-                        ObservableList<String> selectedRow = info_box.getSelectionModel().getSelectedItem();
-                        String ID = selectedRow.get(lastColumnIndex);
-                        //System.out.println(ID+"\n");
                         try {
-                            delete_transfer_statement.setString(1,ID);
-                            delete_transfer_statement.executeUpdate();
+                            delete_income_statement.setString(1,ID);
+                            delete_income_statement.executeUpdate();
                             Alert confirm = new Alert(Alert.AlertType.INFORMATION);
                             alert.setTitle("Success");
-                            alert.setHeaderText("Transfer transaction");
-                            alert.setContentText("Transfer transaction removed");
+                            alert.setHeaderText("Income transaction");
+                            alert.setContentText("Transaction deleted successfully");
                             alert.showAndWait();
                             on_type_selected();
                         } catch (SQLException e) {
                             throw new RuntimeException(e);
                         }
                     }
-                    else
+                    else if(selected_type.equals("Expense"))
                     {
-                        int lastColumnIndex = info_box.getColumns().size() - 2;
-                        ObservableList<String> selectedRow = info_box.getSelectionModel().getSelectedItem();
-                        String ID = selectedRow.get(lastColumnIndex);
-                        //System.out.println(ID+"\n");
-                        if(selected_type.equals("Income"))
-                        {
-                            try {
-                                delete_income_statement.setString(1,ID);
-                                delete_income_statement.executeUpdate();
-                                Alert confirm = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setTitle("Success");
-                                alert.setHeaderText("Income transaction");
-                                alert.setContentText("Transaction deleted successfully");
-                                alert.showAndWait();
-                                on_type_selected();
-                            } catch (SQLException e) {
-                                throw new RuntimeException(e);
-                            }
+                        try {
+                            delete_expense_statement.setString(1,ID);
+                            delete_expense_statement.executeUpdate();
+                            Alert confirm = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Success");
+                            alert.setHeaderText("Expense transaction");
+                            alert.setContentText("Transaction deleted successfully");
+                            alert.showAndWait();
+                            on_type_selected();
+                        } catch (SQLException e) {
+                            throw new RuntimeException(e);
                         }
-                        else if(selected_type.equals("Expense"))
-                        {
-                            try {
-                                delete_expense_statement.setString(1,ID);
-                                delete_expense_statement.executeUpdate();
-                                Alert confirm = new Alert(Alert.AlertType.INFORMATION);
-                                alert.setTitle("Success");
-                                alert.setHeaderText("Expense transaction");
-                                alert.setContentText("Transaction deleted successfully");
-                                alert.showAndWait();
-                                on_type_selected();
-                            } catch (SQLException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-
                     }
+
                 }
-                else
-                {
-                    // User clicked Cancel or closed the dialog, do nothing
-                }
-            });
+            }
+            else
+            {
+                // User clicked Cancel or closed the dialog, do nothing
+            }
+        });
     }
     @FXML
     void on_edit_clicked(ActionEvent event) throws IOException, SQLException {
@@ -306,27 +306,27 @@ public class TransactionsController implements Initializable
         selected_type=type_combo.getValue();
         //System.out.println(amount+people+place+cat+note+desc+date+src+dest);
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("edit-transactions.fxml"));
-            root = loader.load();
-            controller = loader.getController();
-            if(dest==null) controller.others_initialize(amount,people,place,cat,note,desc,date,src,id,selected_type);
-            else controller.transfer_initialize(amount,people,place,cat,note,desc,date,src,dest,id,selected_type);
-            connection.close();
-            Stage popupStage = new Stage();
-            popupStage.initModality(Modality.WINDOW_MODAL);
-            popupStage.initOwner(((Node) event.getSource()).getScene().getWindow());
-            popupStage.setScene(new Scene(root));
-            popupStage.setResizable(false);
-            popupStage.setOnHidden(e -> {
-                try {
-                    connection = Makeconnection.makeconnection();
-                    statement = connection.createStatement();
-                    statement.setQueryTimeout(30);
-                } catch (SQLException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-            popupStage.show();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("edit-transactions.fxml"));
+        root = loader.load();
+        controller = loader.getController();
+        if(dest==null) controller.others_initialize(amount,people,place,cat,note,desc,date,src,id,selected_type);
+        else controller.transfer_initialize(amount,people,place,cat,note,desc,date,src,dest,id,selected_type);
+        connection.close();
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.WINDOW_MODAL);
+        popupStage.initOwner(((Node) event.getSource()).getScene().getWindow());
+        popupStage.setScene(new Scene(root));
+        popupStage.setResizable(false);
+        popupStage.setOnHidden(e -> {
+            try {
+                connection = Makeconnection.makeconnection();
+                statement = connection.createStatement();
+                statement.setQueryTimeout(30);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        popupStage.show();
     }
     Button add_category_button;
     @FXML
@@ -410,4 +410,23 @@ public class TransactionsController implements Initializable
             e.printStackTrace();
         }
     }
+    public void handleEditCategoryButton(ActionEvent event) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("edit-category-dialouge-box-2.fxml"));
+            Parent editCategoryParent = fxmlLoader.load();
+
+            Scene editCategoryScene = new Scene(editCategoryParent);
+            Stage editCategoryStage = new Stage();
+
+            editCategoryStage.setScene(editCategoryScene);
+
+            editCategoryStage.setTitle("Edit Category");
+            editCategoryStage.initModality(Modality.APPLICATION_MODAL);
+
+            editCategoryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
