@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -71,14 +70,6 @@ public class TransactionsController implements Initializable {
     Button delete_button;
     @FXML
     Button edit_button;
-    @FXML
-    private ListView<PersonClasses.Wallet> ZakwalletListView;
-    @FXML
-    private TextField nameField;
-    @FXML
-    private TextField descField;
-    @FXML
-    private TextField zakField;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -99,40 +90,19 @@ public class TransactionsController implements Initializable {
         }
     }
 
-    public void zakInit(){
-        List<PersonClasses.Wallet> wallets = PersonDao.getWallets();
-        ObservableList<PersonClasses.Wallet> observableList = FXCollections.observableArrayList(wallets);
-        ZakwalletListView.setCellFactory(param -> new ListCell<PersonClasses.Wallet>() {
-            @Override
-            protected void updateItem(PersonClasses.Wallet item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(item.getName());
-                }
-            }
-        });
-
-        ZakwalletListView.setItems(observableList);
-        ZakwalletListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                String walName;
-                ResultSet tot_Amount;
-                walName = newValue.getName();
-                nameField.setText(newValue.getName());
-                descField.setText(newValue.getDescription());
-                try (Connection connection = Makeconnection.makeconnection()) {
-                    PreparedStatement preparedStatement = connection.prepareStatement("select current_balance from wallet_balance_view where wallet_name = " + walName);
-                    tot_Amount = preparedStatement.executeQuery();
-                    zakField.setText(tot_Amount.getString("current_balance"));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-    }
-
     @FXML
     void on_type_selected() throws SQLException {
+
+        if(connection.isClosed())//connection to be closed
+        {
+            connection = Makeconnection.makeconnection();
+            statement = connection.createStatement();
+            delete_income_statement = connection.prepareStatement("DELETE FROM Income WHERE income_id=?");
+            delete_expense_statement = connection.prepareStatement("DELETE FROM expense WHERE transaction_id=?");
+            delete_transfer_statement = connection.prepareStatement("DELETE FROM transfer WHERE transfer_id=?");
+            statement.setQueryTimeout(30);
+        }
+
         info_box.getItems().clear();
         if (type_combo.getValue() != null) {
             selected_type = type_combo.getValue();
@@ -373,6 +343,15 @@ public class TransactionsController implements Initializable {
             dialog.setTitle("Add Category");
             Optional<ButtonType> clickedbutton = dialog.showAndWait();
 
+            dialog.setOnCloseRequest(EVENT -> {
+                try
+                {
+                    on_type_selected();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
             if (clickedbutton.get() == ButtonType.FINISH) {
                 AddCategory controller = fxmlLoader.getController();
                 controller.handleFinishButton();
@@ -393,6 +372,15 @@ public class TransactionsController implements Initializable {
             dialog.setDialogPane(dialogPane);
             dialog.setTitle("Add People");
             Optional<ButtonType> clickedbutton = dialog.showAndWait();
+
+            dialog.setOnCloseRequest(EVENT -> {
+                try
+                {
+                    on_type_selected();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
 
             if (clickedbutton.get() == ButtonType.FINISH) {
                 AddPeople controller = fxmlLoader.getController();
@@ -417,6 +405,15 @@ public class TransactionsController implements Initializable {
             dialog.setTitle("Add Place");
             Optional<ButtonType> clickedbutton = dialog.showAndWait();
 
+            dialog.setOnCloseRequest(EVENT -> {
+                try
+                {
+                    on_type_selected();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
             if (clickedbutton.get() == ButtonType.FINISH) {
                 AddPlace controller = fxmlLoader.getController();
                 controller.handleFinishButton();
@@ -429,6 +426,7 @@ public class TransactionsController implements Initializable {
     @FXML
     private void handleAddWalletButton(ActionEvent event) {
         try {
+            connection.close();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("add-wallet-dialouge.fxml"));
             DialogPane dialogPane = fxmlLoader.load();
 
@@ -438,17 +436,29 @@ public class TransactionsController implements Initializable {
             dialog.setTitle("Add Wallet");
             Optional<ButtonType> clickedbutton = dialog.showAndWait();
 
+            dialog.setOnCloseRequest(EVENT -> {
+                try
+                {
+                    on_type_selected();
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
             if (clickedbutton.get() == ButtonType.FINISH) {
                 AddWallet controller = fxmlLoader.getController();
                 controller.handleFinishButton();
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public void handleEditCategoryButton(ActionEvent event) {
         try {
+            connection.close();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("edit-category-dialouge-box.fxml"));
             Parent editCategoryParent = fxmlLoader.load();
 
@@ -470,11 +480,14 @@ public class TransactionsController implements Initializable {
             });
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public void handleEditPeopleButton(ActionEvent event) {
         try {
+            connection.close();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("edit-people-dialouge-box.fxml"));
             Parent editPeopleParent = fxmlLoader.load();
 
@@ -496,11 +509,14 @@ public class TransactionsController implements Initializable {
             });
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public void handleEditPlaceButton(ActionEvent event) {
         try {
+            connection.close();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("edit-place-dialouge-box.fxml"));
             Parent editPlaceParent = fxmlLoader.load();
 
@@ -522,10 +538,13 @@ public class TransactionsController implements Initializable {
             });
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
     public void handleEditWalletButton(ActionEvent event) {
         try {
+            connection.close();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("edit-wallet-dialouge-box.fxml"));
             Parent editWalletParent = fxmlLoader.load();
 
@@ -547,6 +566,8 @@ public class TransactionsController implements Initializable {
             });
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }
