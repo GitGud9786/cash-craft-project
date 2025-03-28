@@ -111,10 +111,10 @@ public class TransactionsController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-            dropShadow = new DropShadow();
-            dropShadow.setRadius(15);
-            dropShadow.setOffsetX(5);
-            dropShadow.setOffsetY(5);
+        dropShadow = new DropShadow();
+        dropShadow.setRadius(15);
+        dropShadow.setOffsetX(5);
+        dropShadow.setOffsetY(5);
 
 
 
@@ -807,6 +807,11 @@ public class TransactionsController implements Initializable {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+    public Button importExport;
+    public void handleImportExportButton(ActionEvent event) {
+        ExportImportScene exportImportScene = new ExportImportScene();
+        exportImportScene.show();
     }
 }
 
