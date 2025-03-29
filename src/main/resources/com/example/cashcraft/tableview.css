@@ -35,3 +35,12 @@
     -fx-border-radius: 5px; /* Set border radius */
 }
 
+
+.checkbox > .box {
+    -fx-background-color: white; /* Checkbox background color */
+    -fx-border-color: #ccc; /* Checkbox border color */
+}
+
+.checkbox > .box > .mark {
+    -fx-background-color: #641E16; /* Checkbox mark color */
+}
