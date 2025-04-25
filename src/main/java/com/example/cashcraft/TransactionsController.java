@@ -43,7 +43,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public class TransactionsController implements Initializable {
     EdittransactionsController controller;
 
-    static private double zakTotal = 0;
     AddTransactionController addController;
     private Scene scene;
     private Stage stage;
@@ -117,10 +116,6 @@ public class TransactionsController implements Initializable {
     @FXML
     private TextField zakField;
     @FXML
-    private TextField totField;
-    @FXML
-    private Button adder;
-    @FXML
     private DropShadow dropShadow;
     @FXML
     private VBox buttons_vbox;
@@ -129,10 +124,10 @@ public class TransactionsController implements Initializable {
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
-        dropShadow = new DropShadow();
-        dropShadow.setRadius(15);
-        dropShadow.setOffsetX(5);
-        dropShadow.setOffsetY(5);
+            dropShadow = new DropShadow();
+            dropShadow.setRadius(15);
+            dropShadow.setOffsetX(5);
+            dropShadow.setOffsetY(5);
 
 
         buttons_shower.setText("Buttons: Showing");
@@ -307,7 +302,7 @@ public class TransactionsController implements Initializable {
                 String timing = resultset.getString("transaction_date");
                 String from_wallet;
                 if(resultset.getString("transaction_type").equals("Transfer"))
-                    from_wallet = resultset.getString("from_wallet");
+                from_wallet = resultset.getString("from_wallet");
                 else from_wallet = resultset.getString("wallet");
                 String to_wallet = resultset.getString("to_wallet");
                 String people = resultset.getString("person");
@@ -706,32 +701,9 @@ public class TransactionsController implements Initializable {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
-                    setStyle(""); // Clear any existing style
                 } else {
                     setText(item.getName());
-                    setPrefHeight(60); // Set the preferred height
-                    setStyle("-fx-background-color: #f0f0f0; " +
-                            "-fx-background-radius: 10px; " +
-                            "-fx-padding: 10px; " +
-                            "-fx-font-size: 16px; " +
-                            "-fx-border-color: #ccc; " +
-                            "-fx-border-radius: 10px;");
                 }
-
-                setOnMouseEntered(event -> setStyle("-fx-background-color: #e0e0e0; " +
-                        "-fx-background-radius: 10px; " +
-                        "-fx-padding: 10px; " +
-                        "-fx-font-size: 16px; " +
-                        "-fx-border-color: #ccc; " +
-                        "-fx-border-radius: 10px;"));
-
-                // Event handler for mouse exit
-                setOnMouseExited(event -> setStyle("-fx-background-color: #f0f0f0; " +
-                        "-fx-background-radius: 10px; " +
-                        "-fx-padding: 10px; " +
-                        "-fx-font-size: 16px; " +
-                        "-fx-border-color: #ccc; " +
-                        "-fx-border-radius: 10px;"));
             }
         });
 
@@ -749,34 +721,12 @@ public class TransactionsController implements Initializable {
                     preparedStatement.setString(1, walName);
                     tot_Amount = preparedStatement.executeQuery();
                     int val = tot_Amount.getInt("current_balance");
-                    zakField.setText(String.format("%.2f", val * .025));
+                    zakField.setText(String.valueOf(val * .025));
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
             }
         });
-
-        adder.setOnAction(event -> {
-            PersonClasses.Wallet selectedWallet = ZakwalletListView.getSelectionModel().getSelectedItem();
-            if (selectedWallet != null) {
-                String walName = selectedWallet.getName();
-                try (Connection connection = Makeconnection.makeconnection()) {
-                    // Calculate Zakat
-                    PreparedStatement preparedStatement = connection.prepareStatement("select current_balance from wallet_balance_view where wallet_name = ?");
-                    preparedStatement.setString(1, walName);
-                    ResultSet tot_Amount = preparedStatement.executeQuery();
-                    if (tot_Amount.next()) {
-                        int val = tot_Amount.getInt("current_balance");
-                        zakTotal += val * 0.025;
-                    }
-                    totField.setText(String.format("%.2f", zakTotal));
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-
-
 
     }
 
