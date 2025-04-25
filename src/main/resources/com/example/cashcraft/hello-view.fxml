@@ -181,5 +181,10 @@
             </ScrollPane>
          </content>
       </Tab>
+      <Tab onSelectionChanged="#on_graphs2_clicked" text="Bar">
+          <content>
+              <StackPane fx:id="graph_stack2" prefHeight="150.0" prefWidth="200.0" />
+          </content>
+      </Tab>
   </tabs>
 </TabPane>
