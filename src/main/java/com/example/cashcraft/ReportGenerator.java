@@ -1,9 +1,8 @@
 package com.example.cashcraft;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.*;
 
 import java.io.FileOutputStream;
 import java.sql.Connection;
@@ -14,162 +13,166 @@ import java.sql.Statement;
 public class ReportGenerator {
 
     public void generateReport(String filePath, String reportTitle) throws Exception {
-        Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream(filePath));
+        Document document = new Document(PageSize.A4, 36, 36, 54, 36); // custom margins
+        PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filePath));
+
+        // Add page event for header/footer
+        //writer.setPageEvent(new HeaderFooterPageEvent(reportTitle));
+
         document.open();
 
-        // Add title
-        document.add(new Paragraph(reportTitle, FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18)));
-        document.add(new Paragraph("Generated on: " + new java.util.Date(), FontFactory.getFont(FontFactory.HELVETICA, 12)));
-        document.add(Chunk.NEWLINE);
+        // Title
+        Font titleFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 24, BaseColor.DARK_GRAY);
+        Paragraph title = new Paragraph(reportTitle, titleFont);
+        title.setAlignment(Element.ALIGN_CENTER);
+        title.setSpacingAfter(20f);
+        document.add(title);
 
-        // Add Overview Section
-        document.add(new Paragraph("Overview:", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14)));
-        PdfPTable overviewTable = createOverviewTable();
-        document.add(overviewTable);
-        document.add(Chunk.NEWLINE);
+        // Overview Section
+        addSectionTitle(document, "Overview");
+        document.add(createOverviewTable());
 
-        // Add Expense Section
-        document.add(new Paragraph("Expenses:", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14)));
-        PdfPTable expenseTable = createExpenseTable();
-        document.add(expenseTable);
-        document.add(Chunk.NEWLINE);
+        // Expense Section
+        addSectionTitle(document, "Expenses");
+        document.add(createExpenseTable());
 
-        // Add Income Section
-        document.add(new Paragraph("Incomes:", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14)));
-        PdfPTable incomeTable = createIncomeTable();
-        document.add(incomeTable);
-        document.add(Chunk.NEWLINE);
+        // Income Section
+        addSectionTitle(document, "Incomes");
+        document.add(createIncomeTable());
 
-        // Add Transfer Section
-        document.add(new Paragraph("Transfers:", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14)));
-        PdfPTable transferTable = createTransferTable();
-        document.add(transferTable);
+        // Transfer Section
+        addSectionTitle(document, "Transfers");
+        document.add(createTransferTable());
 
         document.close();
     }
 
+    private void addSectionTitle(Document document, String title) throws DocumentException {
+        Font sectionFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, BaseColor.BLACK);
+        Paragraph sectionTitle = new Paragraph(title, sectionFont);
+        sectionTitle.setSpacingBefore(10f);  // Reduced space before the section title
+        sectionTitle.setSpacingAfter(0f);    // No space after the section title
+        document.add(sectionTitle);
+
+//        LineSeparator ls = new LineSeparator();
+//        ls.setPercentage(100); // Full width line
+//        document.add(new Chunk(ls));
+//        // Remove Chunk.NEWLINE or reduce it
+//        document.add(new Chunk(""));  // Empty chunk to control additional spacing
+    }
+
+
+
     private PdfPTable createExpenseTable() throws SQLException {
-        PdfPTable table = new PdfPTable(6); // Adjust column count as needed
-        table.setWidthPercentage(100);
-
-        // Add table headers
-        table.addCell("Transaction ID");
-        table.addCell("Amount");
-        table.addCell("Description");
-        table.addCell("Category");
-        table.addCell("Date");
-        table.addCell("Wallet");
-
-        // Fetch expense data from the database
-        String query = "SELECT transaction_id, amount, \"desc\", category, \"date\", wallet FROM expense";
-        try (Connection conn = Makeconnection.makeconnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            while (rs.next()) {
-                table.addCell(rs.getString("transaction_id"));
-                table.addCell(String.valueOf(rs.getDouble("amount")));
-                table.addCell(rs.getString("desc"));
-                table.addCell(rs.getString("category"));
-                table.addCell(rs.getString("date"));
-                table.addCell(rs.getString("wallet"));
-            }
-        }
-
-        return table;
+        String query = "SELECT e.transaction_id, e.amount, e.\"desc\", c.category_name, e.\"date\", w.wallet_name " +
+                "FROM expense e " +
+                "JOIN category c ON e.category = c.category_id " +
+                "JOIN wallet w ON e.wallet = w.wallet_id";
+        return createTable(query, new String[]{"Transaction ID", "Amount", "Description", "Category", "Date", "Wallet"}, 6);
     }
 
     private PdfPTable createOverviewTable() throws SQLException {
-        PdfPTable table = new PdfPTable(5); // 5 columns for the overview
-        table.setWidthPercentage(100);
-
-        // Add table headers
-        table.addCell("Wallet Name");
-        table.addCell("Total Income");
-        table.addCell("Total Expense");
-        table.addCell("Total Outgoing Transfer");
-        table.addCell("Current Balance");
-
-        // Fetch data from the wallet_balance_view
         String query = "SELECT wallet_name, total_income, total_expense, total_outgoing_transfer, current_balance FROM wallet_balance_view";
-        try (Connection conn = Makeconnection.makeconnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            while (rs.next()) {
-                table.addCell(rs.getString("wallet_name"));
-                table.addCell(String.valueOf(rs.getDouble("total_income")));
-                table.addCell(String.valueOf(rs.getDouble("total_expense")));
-                table.addCell(String.valueOf(rs.getDouble("total_outgoing_transfer")));
-                table.addCell(String.valueOf(rs.getDouble("current_balance")));
-            }
-        }
-
-        return table;
+        return createTable(query, new String[]{"Wallet Name", "Total Income", "Total Expense", "Total Outgoing Transfer", "Current Balance"}, 5);
     }
 
     private PdfPTable createIncomeTable() throws SQLException {
-        PdfPTable table = new PdfPTable(6); // Adjust column count as needed
+        String query = "SELECT i.income_id, i.amount, i.\"desc\", COALESCE(c.category_name, 'N/A') AS category_name, i.\"date\", COALESCE(w.wallet_name, 'N/A') AS wallet_name " +
+                "FROM income i " +
+                "LEFT JOIN category c ON i.category = c.category_id " +
+                "LEFT JOIN wallet w ON i.wallet = w.wallet_id";
+        return createTable(query, new String[]{"Income ID", "Amount", "Description", "Category", "Date", "Wallet"}, 6);
+    }
+
+    private PdfPTable createTransferTable() throws SQLException {
+        String query = "SELECT t.transfer_id, t.amount, t.\"desc\", COALESCE(c.category_name, 'N/A') AS category_name, t.\"date\", " +
+                "COALESCE(fw.wallet_name, 'N/A') AS from_wallet, COALESCE(tw.wallet_name, 'N/A') AS to_wallet " +
+                "FROM transfer t " +
+                "LEFT JOIN category c ON t.category = c.category_id " +
+                "LEFT JOIN wallet fw ON t.from_wallet = fw.wallet_id " +
+                "LEFT JOIN wallet tw ON t.to_wallet = tw.wallet_id";
+        return createTable(query, new String[]{"Transfer ID", "Amount", "Description", "Category", "Date", "From Wallet", "To Wallet"}, 7);
+    }
+    private PdfPTable createTable(String query, String[] headers, int columns) throws SQLException {
+        PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(100);
+        table.setSpacingBefore(10f);
+        table.setSpacingAfter(10f);
+        table.setHeaderRows(1);
 
-        // Add table headers
-        table.addCell("Income ID");
-        table.addCell("Amount");
-        table.addCell("Description");
-        table.addCell("Category");
-        table.addCell("Date");
-        table.addCell("Wallet");
+        Font headerFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.WHITE);
+        BaseColor headerBgColor = BaseColor.DARK_GRAY;
+        BaseColor oddRowColor = new BaseColor(245, 245, 245); // light gray
+        BaseColor evenRowColor = BaseColor.WHITE;
 
-        // Fetch income data from the database
-        String query = "SELECT income_id, amount, \"desc\", category, \"date\", wallet FROM income";
+        // Add header cells
+        for (String header : headers) {
+            PdfPCell cell = new PdfPCell(new Phrase(header, headerFont));
+            cell.setBackgroundColor(headerBgColor);
+            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+            cell.setPadding(8);
+            table.addCell(cell);
+        }
+
+        // Fetch and add data rows
         try (Connection conn = Makeconnection.makeconnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
+            int rowCount = 0;
             while (rs.next()) {
-                table.addCell(rs.getString("income_id"));
-                table.addCell(String.valueOf(rs.getDouble("amount")));
-                table.addCell(rs.getString("desc"));
-                table.addCell(rs.getString("category"));
-                table.addCell(rs.getString("date"));
-                table.addCell(rs.getString("wallet"));
+                BaseColor bgColor = (rowCount % 2 == 0) ? evenRowColor : oddRowColor;
+                for (int i = 1; i <= columns; i++) {
+                    PdfPCell cell = new PdfPCell(new Phrase(rs.getString(i)));
+                    cell.setBackgroundColor(bgColor);
+                    cell.setHorizontalAlignment(i == 2 ? Element.ALIGN_RIGHT : Element.ALIGN_LEFT); // Amounts right-aligned
+                    cell.setPadding(6);
+                    table.addCell(cell);
+                }
+                rowCount++;
             }
         }
 
         return table;
     }
 
-    private PdfPTable createTransferTable() throws SQLException {
-        PdfPTable table = new PdfPTable(7); // Adjust column count as needed
-        table.setWidthPercentage(100);
+    // Inner class for header/footer
+    private static class HeaderFooterPageEvent extends PdfPageEventHelper {
+        String title;
 
-        // Add table headers
-        table.addCell("Transfer ID");
-        table.addCell("Amount");
-        table.addCell("Description");
-        table.addCell("Category");
-        table.addCell("Date");
-        table.addCell("From Wallet");
-        table.addCell("To Wallet");
-
-        // Fetch transfer data from the database
-        String query = "SELECT transfer_id, amount, \"desc\", category, \"date\", from_wallet, to_wallet FROM transfer";
-        try (Connection conn = Makeconnection.makeconnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            while (rs.next()) {
-                table.addCell(rs.getString("transfer_id"));
-                table.addCell(String.valueOf(rs.getDouble("amount")));
-                table.addCell(rs.getString("desc"));
-                table.addCell(rs.getString("category"));
-                table.addCell(rs.getString("date"));
-                table.addCell(rs.getString("from_wallet"));
-                table.addCell(rs.getString("to_wallet"));
-            }
+        public HeaderFooterPageEvent(String title) {
+            this.title = title;
         }
 
-        return table;
+        @Override
+        public void onEndPage(PdfWriter writer, Document document) {
+            PdfPTable header = new PdfPTable(1);
+            try {
+                header.setTotalWidth(520);
+                header.setWidths(new int[]{24});
+                header.setLockedWidth(true);
+                header.getDefaultCell().setFixedHeight(30);
+                header.getDefaultCell().setBorder(Rectangle.BOTTOM);
+                header.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                header.addCell(new Phrase(title, new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.GRAY)));
+                header.writeSelectedRows(0, -1, 36, 820, writer.getDirectContent());
+            } catch (DocumentException de) {
+                throw new ExceptionConverter(de);
+            }
+
+            PdfPTable footer = new PdfPTable(1);
+            try {
+                footer.setTotalWidth(520);
+                footer.setWidths(new int[]{24});
+                footer.setLockedWidth(true);
+                footer.getDefaultCell().setFixedHeight(30);
+                footer.getDefaultCell().setBorder(Rectangle.TOP);
+                footer.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+                footer.addCell(new Phrase(String.format("Page %d", writer.getPageNumber()), new Font(Font.FontFamily.HELVETICA, 10, Font.ITALIC, BaseColor.GRAY)));
+                footer.writeSelectedRows(0, -1, 36, 30, writer.getDirectContent());
+            } catch (DocumentException de) {
+                throw new ExceptionConverter(de);
+            }
+        }
     }
 }
