@@ -24,15 +24,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<TabPane fx:id="main_tab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@test.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cashcraft.TransactionsController">
-  <tabs>
-    <Tab text="Transactions">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="background" stylesheets="@transaction_bkg.css">
+<TabPane fx:id="main_tab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@test.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cashcraft.TransactionsController">
+   <tabs>
+      <Tab text="Transactions">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="background" stylesheets="@transaction_bkg.css">
                <children>
                   <TableView fx:id="info_box" layoutX="180.0" layoutY="46.0" prefHeight="555.0" prefWidth="1090.0" stylesheets="@tableview.css">
-                    <columns>
-                      <TableColumn fx:id="amount_column" prefWidth="114.0" text="Amount (Tk)" />
+                     <columns>
+                        <TableColumn fx:id="amount_column" prefWidth="114.0" text="Amount (Tk)" />
                         <TableColumn fx:id="people_column" prefWidth="100.0" text="People" />
                         <TableColumn fx:id="place_column" prefWidth="100.0" text="Place" />
                         <TableColumn fx:id="cat_column" prefWidth="100.0" text="Category" />
@@ -42,7 +42,7 @@
                         <TableColumn fx:id="src_column" prefWidth="100.0" text="Main wallet" />
                         <TableColumn fx:id="dest_column" prefWidth="100.0" text="End wallet" />
                         <TableColumn fx:id="trans_column" maxWidth="1.7976931348623157E308" prefWidth="250.0" text="Transaction ID" />
-                    </columns>
+                     </columns>
                   </TableView>
                   <HBox alignment="TOP_CENTER" layoutX="175.0" layoutY="606.0" prefHeight="47.0" prefWidth="1100.0" spacing="5.0" AnchorPane.bottomAnchor="-3.0">
                      <children>
@@ -153,20 +153,20 @@
                      </font>
                   </CheckBox>
                </children></AnchorPane>
-      </content>
-    </Tab>
-    <Tab onSelectionChanged="#zakInit" text="Zakat">
-      <content>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@transaction_bkg.css">
+         </content>
+      </Tab>
+      <Tab onSelectionChanged="#zakInit" text="Zakat">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@transaction_bkg.css">
                <children>
                   <GridPane layoutY="-2.0" prefHeight="658.0" prefWidth="232.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="324.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="593.0" minHeight="10.0" prefHeight="590.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints maxHeight="324.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="593.0" minHeight="10.0" prefHeight="590.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
                      <children>
                         <Label alignment="CENTER" prefHeight="72.0" prefWidth="250.0" text="Select Wallet" textFill="#0d0d0d">
                            <font>
@@ -204,10 +204,17 @@
                      <font>
                         <Font size="18.0" />
                      </font></TextField>
-                  <Button fx:id="adder" layoutX="837.0" layoutY="540.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="242.0" stylesheets="@buttons.css" text="Display cumulative Zakat">
+                  <Button fx:id="adder" alignment="CENTER" layoutX="362.0" layoutY="446.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="120.0" stylesheets="@buttons.css" text="Add">
                      <font>
                         <Font size="24.0" />
                      </font>
+                     <graphic>
+                        <ImageView fitHeight="42.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/icons8-plus-64.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
                   </Button>
                   <Label layoutX="365.0" layoutY="354.0" prefHeight="52.0" prefWidth="118.0" text="Total:">
                      <font>
@@ -219,13 +226,42 @@
                         <Font size="18.0" />
                      </font>
                   </TextField>
+                  <Button fx:id="subtracter" alignment="CENTER" layoutX="510.0" layoutY="446.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="150.0" stylesheets="@buttons.css" text="Subtract">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="42.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/icons8-minus-64.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="reseter" alignment="CENTER" layoutX="693.0" layoutY="444.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="131.0" stylesheets="@buttons.css" text="Reset">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="46.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/icons8-reset-64.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Label fx:id="errorField" layoutX="346.0" layoutY="534.0" prefHeight="60.0" prefWidth="564.0" textFill="#dd2e2e">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
                </children>
                <styleClass>
                   <String fx:value="anchor-pane" />
                   <String fx:value="background" />
                </styleClass></AnchorPane>
-      </content>
-    </Tab>
+         </content>
+      </Tab>
       <Tab fx:id="graph_tab" onSelectionChanged="#on_graphs_clicked" text="Data Analytics">
          <content>
             <ScrollPane fx:id="graph_scroll" prefHeight="200.0" prefWidth="200.0">
@@ -260,5 +296,5 @@
             <StackPane fx:id="graph_stack2" prefHeight="150.0" prefWidth="200.0" />
          </content>
       </Tab>
-  </tabs>
+   </tabs>
 </TabPane>
