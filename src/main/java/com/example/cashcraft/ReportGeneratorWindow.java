@@ -34,6 +34,7 @@ public class ReportGeneratorWindow {
 
         // Layout setup
         GridPane gridPane = new GridPane();
+        gridPane.getStyleClass().add("background");
         gridPane.setPadding(new Insets(10));
         gridPane.setHgap(10);
         gridPane.setVgap(10);

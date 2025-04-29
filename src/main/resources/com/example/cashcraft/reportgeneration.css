@@ -1,4 +1,18 @@
-/* Default button style */
+/* Style for labels */
+.label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+}
+
+/* Style for text fields */
+.text-field {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 10px;
+}
+
+/* Style for buttons */
 .button {
     -fx-background-color: #000133;
     -fx-background-insets: 0, 1;
@@ -13,6 +27,11 @@
     -fx-cursor: hand;
 }
 
+.background {
+    -fx-background-color:
+        linear-gradient(to bottom, #5200AE, #4062BB);
+}
+
 /* Hovered button style */
 .button:hover {
     -fx-background-color: #cc5500;
@@ -22,16 +41,3 @@
 .button:pressed {
     -fx-background-color: #002b4d;
 }
-.date-picker {
-    -fx-background-color: transparent;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0, 0, 5);
-}
-.date-picker > .arrow-button {
-    -fx-background-radius: 10px; /* Adjust the radius as needed */
-}
-
-.date-picker > .text-field {
-    -fx-background-radius: 10px; /* Adjust the radius as needed */
-
-}
-

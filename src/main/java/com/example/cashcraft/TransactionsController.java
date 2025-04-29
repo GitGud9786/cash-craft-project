@@ -142,10 +142,13 @@ public class TransactionsController implements Initializable {
         dropShadow.setOffsetX(5);
         dropShadow.setOffsetY(5);
 
-        buttons_shower.setText("Buttons: Showing");
+        editbuttons_box.setVisible(false);
+        editbuttons_box.setManaged(false);
+
+        buttons_shower.setText("Showing");
         buttons_shower.setSelected(true);
-        buttons_shower2.setText("Showing");
-        buttons_shower2.setSelected(true);
+        buttons_shower2.setText("Hidden");
+        buttons_shower2.setSelected(false);
 
         graph_scroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         selectionModel = info_box.getSelectionModel();
@@ -1349,14 +1352,14 @@ public class TransactionsController implements Initializable {
     @FXML
     public void handleCheckBoxAction() {
         if (buttons_shower.isSelected()) {
-            buttons_shower.setText("Buttons: Showing");
+            buttons_shower.setText("Showing");
             buttons_vbox.setVisible(true);
             buttons_vbox.setManaged(true);
             TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), buttons_vbox);
             slideIn.setToX(0);
             slideIn.play();
         } else {
-            buttons_shower.setText("Buttons: Hidden");
+            buttons_shower.setText("Hidden");
             TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), buttons_vbox);
             slideOut.setToX(-buttons_vbox.getWidth());
             slideOut.setOnFinished(event -> {
@@ -1433,6 +1436,7 @@ public class TransactionsController implements Initializable {
             Stage stage = new Stage();
             ReportGeneratorWindow reportGeneratorWindow = new ReportGeneratorWindow();
             Scene scene = reportGeneratorWindow.createScene(stage);
+            scene.getStylesheets().add(getClass().getResource("/com/example/cashcraft/reportgeneration.css").toExternalForm());
             stage.setScene(scene);
             stage.setTitle("Generate Report");
             stage.initModality(Modality.APPLICATION_MODAL); // Block interaction with other windows
