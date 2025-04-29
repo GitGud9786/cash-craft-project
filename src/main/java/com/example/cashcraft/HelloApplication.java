@@ -26,11 +26,11 @@ public class HelloApplication extends Application {
         stage.setResizable(false);
         stage.show();
         ReportGenerator generator = new ReportGenerator();
-        try {
-            generator.generateReport("monthly_report.pdf", "January 2024");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            generator.generateReport("monthly_report.pdf", "January 2024");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**

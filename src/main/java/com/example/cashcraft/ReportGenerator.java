@@ -5,19 +5,13 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
 
 import java.io.FileOutputStream;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class ReportGenerator {
 
-    public void generateReport(String filePath, String reportTitle) throws Exception {
+    public void generateReport(String filePath, String reportTitle, int month, int year) throws Exception {
         Document document = new Document(PageSize.A4, 36, 36, 54, 36); // custom margins
         PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filePath));
-
-        // Add page event for header/footer
-        //writer.setPageEvent(new HeaderFooterPageEvent(reportTitle));
 
         document.open();
 
@@ -34,15 +28,15 @@ public class ReportGenerator {
 
         // Expense Section
         addSectionTitle(document, "Expenses");
-        document.add(createExpenseTable());
+        document.add(createExpenseTable(month, year));
 
         // Income Section
         addSectionTitle(document, "Incomes");
-        document.add(createIncomeTable());
+        document.add(createIncomeTable(month, year));
 
         // Transfer Section
         addSectionTitle(document, "Transfers");
-        document.add(createTransferTable());
+        document.add(createTransferTable(month, year));
 
         document.close();
     }
@@ -63,37 +57,80 @@ public class ReportGenerator {
 
 
 
-    private PdfPTable createExpenseTable() throws SQLException {
+    private PdfPTable createExpenseTable(int month, int year) throws SQLException {
         String query = "SELECT e.transaction_id, e.amount, e.\"desc\", c.category_name, e.\"date\", w.wallet_name " +
                 "FROM expense e " +
                 "JOIN category c ON e.category = c.category_id " +
-                "JOIN wallet w ON e.wallet = w.wallet_id";
-        return createTable(query, new String[]{"Transaction ID", "Amount", "Description", "Category", "Date", "Wallet"}, 6);
+                "JOIN wallet w ON e.wallet = w.wallet_id " +
+                "WHERE strftime('%m', e.\"date\") = ? AND strftime('%Y', e.\"date\") = ?";
+        try (Connection connection = Makeconnection.makeconnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, String.format("%02d", month)); // Format month as two digits
+            statement.setString(2, String.valueOf(year)); // Convert year to string
+            ResultSet resultSet = statement.executeQuery();
+            return createTable(resultSet, new String[]{"Transaction ID", "Amount", "Description", "Category", "Date", "Wallet"}, 6);
+        }
     }
 
-    private PdfPTable createOverviewTable() throws SQLException {
-        String query = "SELECT wallet_name, total_income, total_expense, total_outgoing_transfer, current_balance FROM wallet_balance_view";
-        return createTable(query, new String[]{"Wallet Name", "Total Income", "Total Expense", "Total Outgoing Transfer", "Current Balance"}, 5);
-    }
-
-    private PdfPTable createIncomeTable() throws SQLException {
+    private PdfPTable createIncomeTable(int month, int year) throws SQLException {
         String query = "SELECT i.income_id, i.amount, i.\"desc\", COALESCE(c.category_name, 'N/A') AS category_name, i.\"date\", COALESCE(w.wallet_name, 'N/A') AS wallet_name " +
                 "FROM income i " +
                 "LEFT JOIN category c ON i.category = c.category_id " +
-                "LEFT JOIN wallet w ON i.wallet = w.wallet_id";
-        return createTable(query, new String[]{"Income ID", "Amount", "Description", "Category", "Date", "Wallet"}, 6);
+                "LEFT JOIN wallet w ON i.wallet = w.wallet_id " +
+                "WHERE strftime('%m', i.\"date\") = ? AND strftime('%Y', i.\"date\") = ?";
+        try (Connection connection = Makeconnection.makeconnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, String.format("%02d", month)); // Format month as two digits
+            statement.setString(2, String.valueOf(year)); // Convert year to string
+            ResultSet resultSet = statement.executeQuery();
+            return createTable(resultSet, new String[]{"Income ID", "Amount", "Description", "Category", "Date", "Wallet"}, 6);
+        }
     }
 
-    private PdfPTable createTransferTable() throws SQLException {
+    private PdfPTable createTransferTable(int month, int year) throws SQLException {
         String query = "SELECT t.transfer_id, t.amount, t.\"desc\", COALESCE(c.category_name, 'N/A') AS category_name, t.\"date\", " +
                 "COALESCE(fw.wallet_name, 'N/A') AS from_wallet, COALESCE(tw.wallet_name, 'N/A') AS to_wallet " +
                 "FROM transfer t " +
                 "LEFT JOIN category c ON t.category = c.category_id " +
                 "LEFT JOIN wallet fw ON t.from_wallet = fw.wallet_id " +
-                "LEFT JOIN wallet tw ON t.to_wallet = tw.wallet_id";
-        return createTable(query, new String[]{"Transfer ID", "Amount", "Description", "Category", "Date", "From Wallet", "To Wallet"}, 7);
+                "LEFT JOIN wallet tw ON t.to_wallet = tw.wallet_id " +
+                "WHERE strftime('%m', t.\"date\") = ? AND strftime('%Y', t.\"date\") = ?";
+        try (Connection connection = Makeconnection.makeconnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, String.format("%02d", month)); // Format month as two digits
+            statement.setString(2, String.valueOf(year)); // Convert year to string
+            ResultSet resultSet = statement.executeQuery();
+            return createTable(resultSet, new String[]{"Transfer ID", "Amount", "Description", "Category", "Date", "From Wallet", "To Wallet"}, 7);
+        }
     }
-    private PdfPTable createTable(String query, String[] headers, int columns) throws SQLException {
+
+    private PdfPTable createOverviewTable() throws SQLException {
+        String query = "SELECT wallet_name, total_income, total_expense, total_outgoing_transfer, current_balance FROM wallet_balance_view";
+        try (Connection connection = Makeconnection.makeconnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(query)) {
+            return createTable(resultSet, new String[]{"Wallet Name", "Total Income", "Total Expense", "Total Outgoing Transfer", "Current Balance"}, 5);
+        }
+    }
+
+//    private PdfPTable createIncomeTable() throws SQLException {
+//        String query = "SELECT i.income_id, i.amount, i.\"desc\", COALESCE(c.category_name, 'N/A') AS category_name, i.\"date\", COALESCE(w.wallet_name, 'N/A') AS wallet_name " +
+//                "FROM income i " +
+//                "LEFT JOIN category c ON i.category = c.category_id " +
+//                "LEFT JOIN wallet w ON i.wallet = w.wallet_id";
+//        return createTable(query, new String[]{"Income ID", "Amount", "Description", "Category", "Date", "Wallet"}, 6);
+//    }
+
+//    private PdfPTable createTransferTable() throws SQLException {
+//        String query = "SELECT t.transfer_id, t.amount, t.\"desc\", COALESCE(c.category_name, 'N/A') AS category_name, t.\"date\", " +
+//                "COALESCE(fw.wallet_name, 'N/A') AS from_wallet, COALESCE(tw.wallet_name, 'N/A') AS to_wallet " +
+//                "FROM transfer t " +
+//                "LEFT JOIN category c ON t.category = c.category_id " +
+//                "LEFT JOIN wallet fw ON t.from_wallet = fw.wallet_id " +
+//                "LEFT JOIN wallet tw ON t.to_wallet = tw.wallet_id";
+//        return createTable(query, new String[]{"Transfer ID", "Amount", "Description", "Category", "Date", "From Wallet", "To Wallet"}, 7);
+//    }
+    private PdfPTable createTable(ResultSet rs, String[] headers, int columns) throws SQLException {
         PdfPTable table = new PdfPTable(columns);
         table.setWidthPercentage(100);
         table.setSpacingBefore(10f);
@@ -115,22 +152,17 @@ public class ReportGenerator {
         }
 
         // Fetch and add data rows
-        try (Connection conn = Makeconnection.makeconnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            int rowCount = 0;
-            while (rs.next()) {
-                BaseColor bgColor = (rowCount % 2 == 0) ? evenRowColor : oddRowColor;
-                for (int i = 1; i <= columns; i++) {
-                    PdfPCell cell = new PdfPCell(new Phrase(rs.getString(i)));
-                    cell.setBackgroundColor(bgColor);
-                    cell.setHorizontalAlignment(i == 2 ? Element.ALIGN_RIGHT : Element.ALIGN_LEFT); // Amounts right-aligned
-                    cell.setPadding(6);
-                    table.addCell(cell);
-                }
-                rowCount++;
+        int rowCount = 0;
+        while (rs.next()) {
+            BaseColor bgColor = (rowCount % 2 == 0) ? evenRowColor : oddRowColor;
+            for (int i = 1; i <= columns; i++) {
+                PdfPCell cell = new PdfPCell(new Phrase(rs.getString(i)));
+                cell.setBackgroundColor(bgColor);
+                cell.setHorizontalAlignment(i == 2 ? Element.ALIGN_RIGHT : Element.ALIGN_LEFT); // Amounts right-aligned
+                cell.setPadding(6);
+                table.addCell(cell);
             }
+            rowCount++;
         }
 
         return table;

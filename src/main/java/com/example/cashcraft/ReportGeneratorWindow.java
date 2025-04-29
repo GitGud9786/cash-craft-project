@@ -27,6 +27,9 @@ public class ReportGeneratorWindow {
                 "July", "August", "September", "October", "November", "December"
         );
 
+        Label yearLabel = new Label("Enter Year:");
+        TextField yearTextField = new TextField();
+
         Button generateButton = new Button("Generate Report");
 
         // Layout setup
@@ -45,7 +48,10 @@ public class ReportGeneratorWindow {
         gridPane.add(monthLabel, 0, 2);
         gridPane.add(monthComboBox, 1, 2);
 
-        gridPane.add(generateButton, 1, 3);
+        gridPane.add(yearLabel, 0, 3);
+        gridPane.add(yearTextField, 1, 3);
+
+        gridPane.add(generateButton, 1, 4);
 
         // Browse button action
         browseButton.setOnAction(event -> {
@@ -61,25 +67,32 @@ public class ReportGeneratorWindow {
             String filePath = filePathField.getText();
             String fileName = fileNameField.getText();
             String selectedMonth = monthComboBox.getValue();
+            String year = yearTextField.getText();
 
-            if (filePath.isEmpty() || fileName.isEmpty() || selectedMonth == null) {
+            if (filePath.isEmpty() || fileName.isEmpty() || selectedMonth == null || year.isEmpty()) {
                 showAlert(Alert.AlertType.ERROR, "Error", "All fields are required!");
                 return;
             }
 
-            String fullFilePath = filePath + File.separator + fileName + ".pdf";
-
+            int month = monthComboBox.getItems().indexOf(selectedMonth) + 1; // Convert month name to number
             try {
+                int yearInt = Integer.parseInt(year); // Validate year input
+
+                String fullFilePath = filePath + File.separator + fileName + ".pdf";
+
                 ReportGenerator generator = new ReportGenerator();
-                generator.generateReport(fullFilePath, selectedMonth + " Report");
+                generator.generateReport(fullFilePath, selectedMonth + " " + year + " Report", month, yearInt);
+
                 showAlert(Alert.AlertType.INFORMATION, "Success", "Report generated successfully!");
+            } catch (NumberFormatException e) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Year must be a valid number!");
             } catch (Exception e) {
                 e.printStackTrace();
                 showAlert(Alert.AlertType.ERROR, "Error", "Failed to generate report: " + e.getMessage());
             }
         });
 
-        return new Scene(gridPane, 400, 250);
+        return new Scene(gridPane, 400, 300);
     }
 
     private void showAlert(Alert.AlertType alertType, String title, String message) {
