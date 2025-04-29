@@ -1422,6 +1422,38 @@ public class TransactionsController implements Initializable {
         ExportImportScene exportImportScene = new ExportImportScene();
         exportImportScene.show();
     }
+
+    @FXML
+    private Button generateReportButton;
+
+
+    @FXML
+    private void onGenerateReportClicked(ActionEvent event) {
+        try {
+            Stage stage = new Stage();
+            ReportGeneratorWindow reportGeneratorWindow = new ReportGeneratorWindow();
+            Scene scene = reportGeneratorWindow.createScene(stage);
+            stage.setScene(scene);
+            stage.setTitle("Generate Report");
+            stage.initModality(Modality.APPLICATION_MODAL); // Block interaction with other windows
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to open the Report Generator window.");
+        }
+    }
+
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+
+
+
+
 }
 
 

@@ -152,6 +152,15 @@
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </CheckBox>
+                  <Button fx:id="generateReportButton" layoutX="3.0" layoutY="168.0" mnemonicParsing="false" onAction="#onGenerateReportClicked" prefHeight="60.0" prefWidth="170.0" stylesheets="@buttons.css" text="Report">
+                     <graphic>
+                        <ImageView fitHeight="83.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/category_add.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
                </children></AnchorPane>
       </content>
     </Tab>
