@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
-<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
@@ -25,207 +25,276 @@
 <?import javafx.scene.text.Font?>
 
 <TabPane fx:id="main_tab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@test.css" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.cashcraft.TransactionsController">
-    <tabs>
-        <Tab text="Transactions">
-            <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="background" stylesheets="@transaction_bkg.css">
-                    <children>
-                        <TableView fx:id="info_box" layoutX="180.0" layoutY="46.0" prefHeight="555.0" prefWidth="1090.0" stylesheets="@tableview.css">
-                            <columns>
-                                <TableColumn fx:id="amount_column" prefWidth="114.0" text="Amount (Tk)" />
-                                <TableColumn fx:id="people_column" prefWidth="100.0" text="People" />
-                                <TableColumn fx:id="place_column" prefWidth="100.0" text="Place" />
-                                <TableColumn fx:id="cat_column" prefWidth="100.0" text="Category" />
-                                <TableColumn fx:id="note_column" prefWidth="180.0" text="Note" />
-                                <TableColumn fx:id="desc_column" prefWidth="180.0" text="Description" />
-                                <TableColumn fx:id="date_column" prefWidth="100.0" text="Date" />
-                                <TableColumn fx:id="src_column" prefWidth="100.0" text="Main wallet" />
-                                <TableColumn fx:id="dest_column" prefWidth="100.0" text="End wallet" />
-                                <TableColumn fx:id="trans_column" maxWidth="1.7976931348623157E308" prefWidth="250.0" text="Transaction ID" />
-                            </columns>
-                        </TableView>
-                        <HBox alignment="TOP_CENTER" layoutX="177.0" layoutY="606.0" prefHeight="47.0" prefWidth="1100.0" spacing="5.0" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="177.0" AnchorPane.rightAnchor="2.0">
-                            <children>
-                                <Button fx:id="edit_button" mnemonicParsing="false" onAction="#on_edit_clicked" prefWidth="540.0" stylesheets="@buttons.css" text="Edit transaction" textFill="WHITE">
-                                    <graphic>
-                                        <ImageView fitHeight="83.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../Images/edit.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                </Button>
-                                <Button fx:id="delete_button" mnemonicParsing="false" onAction="#on_deleteButton_clicked" prefWidth="540.0" stylesheets="@buttons.css" text="Delete transaction" textFill="WHITE">
-                                    <graphic>
-                                        <ImageView fitHeight="83.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../Images/delete.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                </Button>
-                            </children>
-                        </HBox>
-                        <HBox fx:id="editbuttons_box" layoutX="280.0" layoutY="4.0" prefHeight="35.0" prefWidth="990.0" spacing="2.0">
-                            <children>
-                                <Button fx:id="editWallet" mnemonicParsing="false" onAction="#handleEditWalletButton" prefWidth="275.0" stylesheets="@buttons.css" text="Edit Wallet" />
-                                <Button mnemonicParsing="false" onAction="#handleEditPeopleButton" prefWidth="275.0" stylesheets="@buttons.css" text="Edit People" />
-                                <Button fx:id="editPlace" mnemonicParsing="false" onAction="#handleEditPlaceButton" prefWidth="275.0" stylesheets="@buttons.css" text="Edit Place" />
-                                <Button fx:id="edit_category_button" mnemonicParsing="false" onAction="#handleEditCategoryButton" prefWidth="275.0" stylesheets="@buttons.css" text="Edit Category" />
-                            </children>
-                        </HBox>
-                        <VBox fx:id="buttons_vbox" layoutX="3.0" layoutY="305.0" prefHeight="300.0" prefWidth="170.0" spacing="10.0">
-                            <children>
-                                <Button fx:id="add_categroybutton" mnemonicParsing="false" onAction="#handleAddCategoryButton" prefHeight="60.0" prefWidth="170.0" stylesheets="@buttons.css" text="Add Categrory">
-                                    <graphic>
-                                        <ImageView fitHeight="83.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../Images/category_add.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                </Button>
-                                <Button fx:id="add_place_button" mnemonicParsing="false" onAction="#handleAddPlaceButton" prefHeight="60.0" prefWidth="170.0" stylesheets="@buttons.css" text="Add Place">
-                                    <graphic>
-                                        <ImageView fitHeight="83.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../Images/place_add.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                </Button>
-                                <Button fx:id="add_wallet_button" mnemonicParsing="false" onAction="#handleAddWalletButton" prefHeight="60.0" prefWidth="170.0" stylesheets="@buttons.css" text="Add Wallet">
-                                    <graphic>
-                                        <ImageView fitHeight="83.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../Images/wallet_add.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                </Button>
-                                <Button fx:id="add_people_button" mnemonicParsing="false" onAction="#handleAddPersonButton" prefHeight="60.0" prefWidth="170.0" stylesheets="@buttons.css" text="Add People">
-                                    <graphic>
-                                        <ImageView fitHeight="83.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../Images/people_add.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                </Button>
-                                <Button fx:id="add_button" mnemonicParsing="false" onAction="#on_add_transaction_clicked" prefHeight="60.0" prefWidth="170.0" stylesheets="@buttons.css" text="Add transaction">
-                                    <graphic>
-                                        <ImageView fitHeight="83.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                            <image>
-                                                <Image url="@../Images/add.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                </Button>
-                            </children>
-                        </VBox>
-                        <ComboBox fx:id="type_combo" layoutX="14.0" layoutY="8.0" onAction="#on_type_selected" prefHeight="31.0" prefWidth="150.0" promptText="Type" stylesheets="@combobox.css" visibleRowCount="4" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="8.0" />
-                        <CheckBox fx:id="buttons_shower" layoutX="3.0" layoutY="619.0" mnemonicParsing="false" onAction="#handleCheckBoxAction" styleClass="checkbox" stylesheets="@tableview.css" text="Buttons:">
-                            <font>
-                                <Font name="System Bold" size="15.0" />
-                            </font>
-                        </CheckBox>
-                        <CheckBox fx:id="buttons_shower2" layoutX="180.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleCheckBoxAction2" styleClass="checkbox" stylesheets="@tableview.css" text="Buttons:">
-                            <font>
-                                <Font name="System Bold" size="15.0" />
-                            </font>
-                        </CheckBox>
-                    </children></AnchorPane>
-            </content>
-        </Tab>
-        <Tab onSelectionChanged="#zakInit" text="Zakat">
-            <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@transaction_bkg.css">
-                    <children>
-                        <GridPane layoutY="-2.0" prefHeight="658.0" prefWidth="232.0">
-                            <columnConstraints>
-                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints maxHeight="324.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
-                                <RowConstraints maxHeight="593.0" minHeight="10.0" prefHeight="590.0" vgrow="SOMETIMES" />
-                            </rowConstraints>
-                            <children>
-                                <Label alignment="CENTER" prefHeight="72.0" prefWidth="250.0" text="Select Wallet" textFill="#0d0d0d">
-                                    <font>
-                                        <Font name="System Bold Italic" size="36.0" />
-                                    </font></Label>
-                                <ListView fx:id="ZakwalletListView" prefHeight="200.0" prefWidth="200.0" styleClass="background" GridPane.rowIndex="1" />
-                            </children>
-                        </GridPane>
-                        <ImageView fitHeight="646.0" fitWidth="813.0" layoutX="288.0" layoutY="1.0" opacity="0.8" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../Images/zakat.png" />
-                            </image>
-                        </ImageView>
-                        <Label layoutX="365.0" layoutY="112.0" prefHeight="51.0" prefWidth="82.0" text="Name:">
-                            <font>
-                                <Font name="System Bold" size="24.0" />
-                            </font></Label>
-                        <Label layoutX="365.0" layoutY="189.0" prefHeight="54.0" prefWidth="139.0" text="Description:">
-                            <font>
-                                <Font size="24.0" />
-                            </font></Label>
-                        <Label layoutX="365.0" layoutY="275.0" prefHeight="51.0" prefWidth="82.0" text="Zakat:">
-                            <font>
-                                <Font size="24.0" />
-                            </font></Label>
-                        <TextField fx:id="nameField" layoutX="513.0" layoutY="125.0" prefHeight="37.0" prefWidth="287.0">
-                            <font>
-                                <Font size="18.0" />
-                            </font></TextField>
-                        <TextField fx:id="descField" layoutX="512.0" layoutY="196.0" prefHeight="59.0" prefWidth="287.0">
-                            <font>
-                                <Font size="18.0" />
-                            </font></TextField>
-                        <TextField fx:id="zakField" layoutX="512.0" layoutY="282.0" prefHeight="37.0" prefWidth="125.0">
-                            <font>
-                                <Font size="18.0" />
-                            </font></TextField>
-                        <Button fx:id="adder" layoutX="1022.0" layoutY="540.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="52.0" style="-fx-background-color: white;" text="+">
-                            <font>
-                                <Font size="24.0" />
-                            </font>
+  <tabs>
+    <Tab text="Transactions">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" styleClass="background" stylesheets="@transaction_bkg.css">
+               <children>
+                  <TableView fx:id="info_box" layoutX="180.0" layoutY="46.0" prefHeight="555.0" prefWidth="1090.0" stylesheets="@tableview.css">
+                    <columns>
+                      <TableColumn fx:id="amount_column" prefWidth="114.0" text="Amount (Tk)" />
+                        <TableColumn fx:id="people_column" prefWidth="100.0" text="People" />
+                        <TableColumn fx:id="place_column" prefWidth="100.0" text="Place" />
+                        <TableColumn fx:id="cat_column" prefWidth="100.0" text="Category" />
+                        <TableColumn fx:id="note_column" prefWidth="180.0" text="Note" />
+                        <TableColumn fx:id="desc_column" prefWidth="180.0" text="Description" />
+                        <TableColumn fx:id="date_column" prefWidth="100.0" text="Date" />
+                        <TableColumn fx:id="src_column" prefWidth="100.0" text="Main wallet" />
+                        <TableColumn fx:id="dest_column" prefWidth="100.0" text="End wallet" />
+                        <TableColumn fx:id="trans_column" maxWidth="1.7976931348623157E308" prefWidth="250.0" text="Transaction ID" />
+                    </columns>
+                  </TableView>
+                  <HBox alignment="TOP_CENTER" layoutX="175.0" layoutY="606.0" prefHeight="47.0" prefWidth="1100.0" spacing="5.0" AnchorPane.bottomAnchor="-3.0">
+                     <children>
+                        <Button fx:id="importExport" mnemonicParsing="false" onAction="#handleImportExportButton" prefHeight="39.0" prefWidth="540.0" stylesheets="@buttons.css" text="Import/Export">
+                           <graphic>
+                              <ImageView fitHeight="83.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Images/import.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
                         </Button>
-                        <Label layoutX="365.0" layoutY="354.0" prefHeight="52.0" prefWidth="118.0" text="Total:">
-                            <font>
-                                <Font size="24.0" />
-                            </font>
-                        </Label>
-                        <TextField fx:id="totField" layoutX="512.0" layoutY="361.0" prefHeight="37.0" prefWidth="125.0">
-                            <font>
-                                <Font size="18.0" />
-                            </font>
-                        </TextField>
-                    </children>
-                    <styleClass>
-                        <String fx:value="anchor-pane" />
-                        <String fx:value="background" />
-                    </styleClass></AnchorPane>
-            </content>
-        </Tab>
-        <Tab fx:id="graph_tab" onSelectionChanged="#on_graphs_clicked" text="Graphs">
-            <content>
-                <ScrollPane fx:id="graph_scroll" prefHeight="200.0" prefWidth="200.0">
-                    <content>
-                        <StackPane fx:id="graph_stack" maxHeight="1000.0" prefHeight="1000.0" prefWidth="1280.0" style="-fx-background-color: #D5FFFF;">
-                            <stylesheets>
-                                <URL value="@transaction_bkg.css" />
-                                <URL value="@graphs.css" />
-                            </stylesheets>
-                        </StackPane>
-                    </content>
-                </ScrollPane>
-            </content>
-        </Tab>
-        <Tab onSelectionChanged="#on_graphs2_clicked" text="Bar">
-            <content>
-                <StackPane fx:id="graph_stack2" prefHeight="150.0" prefWidth="200.0" />
-            </content>
-        </Tab>
-    </tabs>
+                        <Button fx:id="edit_button" mnemonicParsing="false" onAction="#on_edit_clicked" prefWidth="540.0" stylesheets="@buttons.css" text="Edit transaction" textFill="WHITE">
+                           <graphic>
+                              <ImageView fitHeight="83.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Images/edit.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="delete_button" mnemonicParsing="false" onAction="#on_deleteButton_clicked" prefWidth="540.0" stylesheets="@buttons.css" text="Delete transaction" textFill="WHITE">
+                           <graphic>
+                              <ImageView fitHeight="83.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Images/delete.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="editbuttons_box" layoutX="280.0" layoutY="4.0" prefHeight="35.0" prefWidth="990.0" spacing="2.0">
+                     <children>
+                        <Button fx:id="editWallet" mnemonicParsing="false" onAction="#handleEditWalletButton" prefWidth="275.0" stylesheets="@buttons.css" text="Edit Wallet" />
+                        <Button mnemonicParsing="false" onAction="#handleEditPeopleButton" prefWidth="275.0" stylesheets="@buttons.css" text="Edit People" />
+                        <Button fx:id="editPlace" mnemonicParsing="false" onAction="#handleEditPlaceButton" prefWidth="275.0" stylesheets="@buttons.css" text="Edit Place" />
+                        <Button fx:id="edit_category_button" mnemonicParsing="false" onAction="#handleEditCategoryButton" prefWidth="275.0" stylesheets="@buttons.css" text="Edit Category" />
+                     </children>
+                  </HBox>
+                  <VBox fx:id="buttons_vbox" layoutX="3.0" layoutY="250.0" prefHeight="350.0" prefWidth="170.0" spacing="10.0">
+                     <children>
+                        <Button fx:id="add_categroybutton" mnemonicParsing="false" onAction="#handleAddCategoryButton" prefHeight="60.0" prefWidth="170.0" stylesheets="@buttons.css" text="Add Categrory">
+                           <graphic>
+                              <ImageView fitHeight="83.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Images/category_add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="add_place_button" mnemonicParsing="false" onAction="#handleAddPlaceButton" prefHeight="60.0" prefWidth="170.0" stylesheets="@buttons.css" text="Add Place">
+                           <graphic>
+                              <ImageView fitHeight="83.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Images/place_add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="add_wallet_button" mnemonicParsing="false" onAction="#handleAddWalletButton" prefHeight="60.0" prefWidth="170.0" stylesheets="@buttons.css" text="Add Wallet">
+                           <graphic>
+                              <ImageView fitHeight="83.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Images/wallet_add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="add_people_button" mnemonicParsing="false" onAction="#handleAddPersonButton" prefHeight="60.0" prefWidth="170.0" stylesheets="@buttons.css" text="Add People">
+                           <graphic>
+                              <ImageView fitHeight="83.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Images/people_add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="add_button" mnemonicParsing="false" onAction="#on_add_transaction_clicked" prefHeight="60.0" prefWidth="170.0" stylesheets="@buttons.css" text="Add transaction">
+                           <graphic>
+                              <ImageView fitHeight="83.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Images/add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button fx:id="filter_button" mnemonicParsing="false" onAction="#filter_button_clicked" prefHeight="60.0" prefWidth="170.0" stylesheets="@buttons.css" text="Column filter">
+                           <graphic>
+                              <ImageView fitHeight="83.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../Images/fillter.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                     </children>
+                  </VBox>
+                  <ComboBox fx:id="type_combo" layoutX="14.0" layoutY="10.0" onAction="#on_type_selected" prefHeight="31.0" prefWidth="150.0" promptText="Type" stylesheets="@combobox.css" visibleRowCount="4" AnchorPane.leftAnchor="14.0" />
+                  <CheckBox fx:id="buttons_shower" layoutX="3.0" layoutY="619.0" mnemonicParsing="false" onAction="#handleCheckBoxAction" styleClass="checkbox" stylesheets="@tableview.css" text="Buttons:">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </CheckBox>
+                  <CheckBox fx:id="buttons_shower2" layoutX="180.0" layoutY="11.0" mnemonicParsing="false" onAction="#handleCheckBoxAction2" styleClass="checkbox" stylesheets="@tableview.css" text="Buttons:">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </CheckBox>
+               </children></AnchorPane>
+      </content>
+    </Tab>
+    <Tab onSelectionChanged="#zakInit" text="Zakat">
+      <content>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" stylesheets="@transaction_bkg.css">
+               <children>
+                  <GridPane layoutY="-2.0" prefHeight="658.0" prefWidth="232.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="324.0" minHeight="10.0" prefHeight="68.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="593.0" minHeight="10.0" prefHeight="590.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label alignment="CENTER" prefHeight="72.0" prefWidth="250.0" text="Select Wallet" textFill="#0d0d0d">
+                           <font>
+                              <Font name="System Bold Italic" size="36.0" />
+                           </font></Label>
+                        <ListView fx:id="ZakwalletListView" prefHeight="200.0" prefWidth="200.0" styleClass="background" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
+                  <ImageView fitHeight="646.0" fitWidth="813.0" layoutX="288.0" layoutY="1.0" opacity="0.65" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Images/zakat.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="365.0" layoutY="112.0" prefHeight="51.0" prefWidth="82.0" text="Name:">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font></Label>
+                  <Label layoutX="365.0" layoutY="189.0" prefHeight="54.0" prefWidth="139.0" text="Description:">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font></Label>
+                  <Label layoutX="365.0" layoutY="275.0" prefHeight="51.0" prefWidth="82.0" text="Zakat:">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font></Label>
+                  <TextField fx:id="nameField" editable="false" layoutX="513.0" layoutY="125.0" prefHeight="37.0" prefWidth="287.0" stylesheets="@fields.css">
+                     <font>
+                        <Font size="18.0" />
+                     </font></TextField>
+                  <TextField fx:id="descField" editable="false" layoutX="512.0" layoutY="196.0" prefHeight="59.0" prefWidth="287.0" stylesheets="@fields.css">
+                     <font>
+                        <Font size="18.0" />
+                     </font></TextField>
+                  <TextField fx:id="zakField" editable="false" layoutX="512.0" layoutY="282.0" prefHeight="37.0" prefWidth="125.0" stylesheets="@fields.css">
+                     <font>
+                        <Font size="18.0" />
+                     </font></TextField>
+                  <Button fx:id="adder" alignment="CENTER" layoutX="362.0" layoutY="446.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="120.0" stylesheets="@buttons.css" text="Add">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="42.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/icons8-plus-64.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Label layoutX="365.0" layoutY="354.0" prefHeight="52.0" prefWidth="118.0" text="Total:">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="totField" editable="false" layoutX="512.0" layoutY="361.0" prefHeight="37.0" prefWidth="125.0" stylesheets="@fields.css">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </TextField>
+                  <Button fx:id="subtracter" alignment="CENTER" layoutX="510.0" layoutY="446.0" mnemonicParsing="false" prefHeight="58.0" prefWidth="150.0" stylesheets="@buttons.css" text="Subtract">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="42.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/icons8-minus-64.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="reseter" alignment="CENTER" layoutX="693.0" layoutY="444.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="131.0" stylesheets="@buttons.css" text="Reset">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="46.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/icons8-reset-64.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Label fx:id="errorField" layoutX="346.0" layoutY="534.0" prefHeight="60.0" prefWidth="564.0" textFill="#dd2e2e">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+               <styleClass>
+                  <String fx:value="anchor-pane" />
+                  <String fx:value="background" />
+               </styleClass></AnchorPane>
+      </content>
+    </Tab>
+      <Tab fx:id="graph_tab" onSelectionChanged="#on_graphs_clicked" text="Data Analytics">
+         <content>
+            <ScrollPane fx:id="graph_scroll" prefHeight="200.0" prefWidth="200.0">
+               <content>
+                  <StackPane fx:id="graph_stack" maxHeight="1000.0" prefHeight="1000.0" prefWidth="1280.0" style="-fx-background-color: #232f56;" stylesheets="@transaction_bkg.css">
+                     <children>
+                        <AnchorPane maxHeight="960.0" maxWidth="1280.0" prefHeight="100.0" prefWidth="100.0" style="-fx-background-color: #D5FFFF;" styleClass="round" stylesheets="@transaction_bkg.css" StackPane.alignment="TOP_CENTER">
+                           <StackPane.margin>
+                              <Insets right="10.0" top="20.0" />
+                           </StackPane.margin>
+                           <children>
+                              <Label layoutX="15.0" text="PIE CHART REPRESENTATION" underline="true">
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="15.0" layoutY="500.0" text="BAR CHART REPRESENTATION" underline="true">
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </StackPane>
+               </content>
+            </ScrollPane>
+         </content>
+      </Tab>
+      <Tab onSelectionChanged="#on_graphs2_clicked">
+         <content>
+            <StackPane fx:id="graph_stack2" prefHeight="150.0" prefWidth="200.0" />
+         </content>
+      </Tab>
+  </tabs>
 </TabPane>

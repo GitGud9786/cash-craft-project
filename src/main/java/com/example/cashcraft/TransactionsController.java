@@ -121,11 +121,19 @@ public class TransactionsController implements Initializable {
     @FXML
     private Button adder;
     @FXML
+    private Button subtracter;
+    @FXML
+    private Button reseter;
+    @FXML
+    private Label errorField;
+    @FXML
     private DropShadow dropShadow;
     @FXML
     private VBox buttons_vbox;
     @FXML
     private HBox editbuttons_box;
+    @FXML
+    private Button importExport;
 
     @Override
     public void initialize(URL arg0, ResourceBundle arg1) {
@@ -133,7 +141,6 @@ public class TransactionsController implements Initializable {
         dropShadow.setRadius(15);
         dropShadow.setOffsetX(5);
         dropShadow.setOffsetY(5);
-
 
         buttons_shower.setText("Buttons: Showing");
         buttons_shower.setSelected(true);
@@ -145,6 +152,7 @@ public class TransactionsController implements Initializable {
         delete_button.disableProperty().bind(info_box.getSelectionModel().selectedItemProperty().isNull());
         edit_button.disableProperty().bind(info_box.getSelectionModel().selectedItemProperty().isNull());
         type_combo.getItems().addAll(types);
+        type_combo.setValue("All");
         selected_type = "All";
         try {
             connection = Makeconnection.makeconnection();
@@ -462,6 +470,7 @@ public class TransactionsController implements Initializable {
     @FXML
     private void handleAddCategoryButton(ActionEvent event) {
         try {
+            connection.close();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("add-category-dialouge.fxml"));
             DialogPane dialogPane = fxmlLoader.load();
 
@@ -471,7 +480,7 @@ public class TransactionsController implements Initializable {
             dialog.setTitle("Add Category");
             Optional<ButtonType> clickedbutton = dialog.showAndWait();
 
-            dialog.setOnCloseRequest(EVENT -> {
+            dialog.setOnHidden(EVENT -> {
                 try {
                     on_type_selected();
                 } catch (SQLException ex) {
@@ -479,18 +488,22 @@ public class TransactionsController implements Initializable {
                 }
             });
 
-            if (clickedbutton.get() == ButtonType.FINISH) {
+            if (clickedbutton.isPresent() && clickedbutton.get() == ButtonType.FINISH) {
                 AddCategory controller = fxmlLoader.getController();
                 controller.handleFinishButton();
             }
+            on_type_selected();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @FXML
     private void handleAddPersonButton(ActionEvent event) {
         try {
+            connection.close();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("add-people-dialouge.fxml"));
             DialogPane dialogPane = fxmlLoader.load();
 
@@ -500,7 +513,7 @@ public class TransactionsController implements Initializable {
             dialog.setTitle("Add People");
             Optional<ButtonType> clickedbutton = dialog.showAndWait();
 
-            dialog.setOnCloseRequest(EVENT -> {
+            dialog.setOnHidden(EVENT -> {
                 try {
                     on_type_selected();
                 } catch (SQLException ex) {
@@ -508,12 +521,15 @@ public class TransactionsController implements Initializable {
                 }
             });
 
-            if (clickedbutton.get() == ButtonType.FINISH) {
+            if (clickedbutton.isPresent() && clickedbutton.get() == ButtonType.FINISH) {
                 AddPeople controller = fxmlLoader.getController();
                 controller.handleFinishButton();
             }
+            on_type_selected();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -522,6 +538,7 @@ public class TransactionsController implements Initializable {
     @FXML
     private void handleAddPlaceButton(ActionEvent event) {
         try {
+            connection.close();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("add-place-dialouge.fxml"));
             DialogPane dialogPane = fxmlLoader.load();
 
@@ -531,7 +548,7 @@ public class TransactionsController implements Initializable {
             dialog.setTitle("Add Place");
             Optional<ButtonType> clickedbutton = dialog.showAndWait();
 
-            dialog.setOnCloseRequest(EVENT -> {
+            dialog.setOnHidden(EVENT -> {
                 try {
                     on_type_selected();
                 } catch (SQLException ex) {
@@ -539,12 +556,15 @@ public class TransactionsController implements Initializable {
                 }
             });
 
-            if (clickedbutton.get() == ButtonType.FINISH) {
+            if (clickedbutton.isPresent() && clickedbutton.get() == ButtonType.FINISH) {
                 AddPlace controller = fxmlLoader.getController();
                 controller.handleFinishButton();
             }
+            on_type_selected();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -561,7 +581,7 @@ public class TransactionsController implements Initializable {
             dialog.setTitle("Add Wallet");
             Optional<ButtonType> clickedbutton = dialog.showAndWait();
 
-            dialog.setOnCloseRequest(EVENT -> {
+            dialog.setOnHidden(EVENT -> {
                 try {
                     on_type_selected();
                 } catch (SQLException ex) {
@@ -569,10 +589,11 @@ public class TransactionsController implements Initializable {
                 }
             });
 
-            if (clickedbutton.get() == ButtonType.FINISH) {
+            if (clickedbutton.isPresent() && clickedbutton.get() == ButtonType.FINISH) {
                 AddWallet controller = fxmlLoader.getController();
                 controller.handleFinishButton();
             }
+            on_type_selected();
         } catch (IOException e) {
             e.printStackTrace();
         } catch (SQLException e) {
@@ -697,6 +718,8 @@ public class TransactionsController implements Initializable {
     }
 
     public void zakInit() {
+
+
         List<PersonClasses.Wallet> wallets = PersonDao.getWallets();
         ObservableList<PersonClasses.Wallet> observableList = FXCollections.observableArrayList(wallets);
 
@@ -711,34 +734,40 @@ public class TransactionsController implements Initializable {
                 } else {
                     setText(item.getName());
                     setPrefHeight(60); // Set the preferred height
-                    setStyle("-fx-background-color: #f0f0f0; " +
+                    setStyle("-fx-background-color: #000133; " +
                             "-fx-background-radius: 10px; " +
                             "-fx-padding: 10px; " +
                             "-fx-font-size: 16px; " +
                             "-fx-border-color: #ccc; " +
-                            "-fx-border-radius: 10px;");
+                            "-fx-border-radius: 10px;" +
+                            "-fx-text-fill: white;" +
+                            "-fx-font-weight: bold;");
                 }
 
                 setOnMouseEntered(event -> {
                     if (!isEmpty()) {
-                        setStyle("-fx-background-color: #e0e0e0; " +
+                        setStyle("-fx-background-color: #cc5500; " +
                                 "-fx-background-radius: 10px; " +
                                 "-fx-padding: 10px; " +
                                 "-fx-font-size: 16px; " +
                                 "-fx-border-color: #ccc; " +
-                                "-fx-border-radius: 10px;");
+                                "-fx-border-radius: 10px;" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-weight: bold;");
                     }
                 });
 
                 // Event handler for mouse exit
                 setOnMouseExited(event -> {
                     if (!isEmpty()) {
-                        setStyle("-fx-background-color: #f0f0f0; " +
+                        setStyle("-fx-background-color: #000133; " +
                                 "-fx-background-radius: 10px; " +
                                 "-fx-padding: 10px; " +
                                 "-fx-font-size: 16px; " +
                                 "-fx-border-color: #ccc; " +
-                                "-fx-border-radius: 10px;");
+                                "-fx-border-radius: 10px;" +
+                                "-fx-text-fill: white;" +
+                                "-fx-font-weight: bold;");
                     }
                 });
             }
@@ -778,6 +807,7 @@ public class TransactionsController implements Initializable {
                         int val = tot_Amount.getInt("current_balance");
                         zakTotal += val * 0.025;
                     }
+                    errorField.setText("");
                     totField.setText(String.format("%.2f", zakTotal));
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
@@ -785,21 +815,38 @@ public class TransactionsController implements Initializable {
             }
         });
 
-        adder.setOnMouseEntered(event -> adder.setStyle("-fx-background-color: #e0e0e0; " +
-                "-fx-background-radius: 10px; " +
-                "-fx-padding: 10px; " +
-                "-fx-font-size: 24px; " +
-                "-fx-border-color: #ccc; " +
-                "-fx-border-radius: 10px;"));
+        subtracter.setOnAction(event -> {
+            PersonClasses.Wallet selectedWallet = ZakwalletListView.getSelectionModel().getSelectedItem();
+            if (selectedWallet != null) {
+                String walName = selectedWallet.getName();
+                try (Connection connection = Makeconnection.makeconnection()) {
+                    // Calculate Zakat
+                    PreparedStatement preparedStatement = connection.prepareStatement("select current_balance from wallet_balance_view where wallet_name = ?");
+                    preparedStatement.setString(1, walName);
+                    ResultSet tot_Amount = preparedStatement.executeQuery();
+                    double temp = zakTotal;
+                    if (tot_Amount.next()) {
+                        int val = tot_Amount.getInt("current_balance");
+                        temp -= val * 0.025;
+                        if(temp < 0)
+                            errorField.setText("Zakat Cannot Be Less Than 0!");
+                        else {
+                            zakTotal = temp;
+                            errorField.setText("");
+                        }
+                    }
+                        totField.setText(String.format("%.2f", zakTotal));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
 
-        // Event handler for mouse exit on the button
-        adder.setOnMouseExited(event -> adder.setStyle("-fx-background-color: #f0f0f0; " +
-                "-fx-background-radius: 10px; " +
-                "-fx-padding: 10px; " +
-                "-fx-font-size: 24px; " +
-                "-fx-border-color: #ccc; " +
-                "-fx-border-radius: 10px;"));
-
+        reseter.setOnAction(event -> {
+            zakTotal = 0;
+            totField.setText(String.format("%.2f", zakTotal));
+            errorField.setText("");
+        });
 
     }
 
@@ -1340,7 +1387,43 @@ public class TransactionsController implements Initializable {
             slideOut.play();
         }
     }
+
+    @FXML
+    public void filter_button_clicked(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("column_filter.fxml"));
+        Parent root = loader.load();
+
+        FilterController filterController = loader.getController();
+        filterController.initData(this);
+
+        Stage popupStage = new Stage();
+        popupStage.initModality(Modality.WINDOW_MODAL);
+        popupStage.initOwner(((Node) event.getSource()).getScene().getWindow());
+        popupStage.setScene(new Scene(root));
+        popupStage.setResizable(false);
+        popupStage.show();
+    }
+
+    public void updateColumnVisibility(FilterController filterController) throws SQLException {
+        amount_column.setVisible(filterController.amount_filter.isSelected());
+        people_column.setVisible(filterController.people_filter.isSelected());
+        place_column.setVisible(filterController.place_filter.isSelected());
+        desc_column.setVisible(filterController.desc_filter.isSelected());
+        note_column.setVisible(filterController.note_filter.isSelected());
+        cat_column.setVisible(filterController.cat_filter.isSelected());
+        date_column.setVisible(filterController.date_filter.isSelected());
+        src_column.setVisible(filterController.src_filter.isSelected());
+        dest_column.setVisible(filterController.dest_filter.isSelected());
+        trans_column.setVisible(filterController.trans_id.isSelected());
+        on_type_selected();
+    }
+    @FXML
+    public void handleImportExportButton(ActionEvent event) {
+        ExportImportScene exportImportScene = new ExportImportScene();
+        exportImportScene.show();
+    }
 }
+
 
 
 /* SELECT SUM(i.amount) AS total_amount, c.category_name as name FROM income i JOIN category c ON i.category = c.category_id GROUP BY i.category ;*/
