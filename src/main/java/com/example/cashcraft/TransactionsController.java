@@ -835,7 +835,7 @@ public class TransactionsController implements Initializable {
                             errorField.setText("");
                         }
                     }
-                    totField.setText(String.format("%.2f", zakTotal));
+                        totField.setText(String.format("%.2f", zakTotal));
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
